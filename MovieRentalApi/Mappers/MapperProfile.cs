@@ -9,6 +9,7 @@ namespace MovieRentalApi.Mappers
         public MapperProfile()
         {
             CreateMap<MovieEntity, MovieModel>().ReverseMap();
+            CreateMap<MovieEntity, MovieCreateModel>().ReverseMap();
         }
     }
 }

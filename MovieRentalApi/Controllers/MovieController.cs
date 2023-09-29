@@ -11,34 +11,31 @@ namespace MovieRentalApi.Controllers;
 public class MovieController : ControllerBase
 {
     private readonly IBaseRepository<MovieEntity> _repository;
-    private readonly IMapper _mapperProfile;
+    private readonly IMapper _mapper;
 
-    public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapperProfile)
+    public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapper)
     {
         _repository = repository;
-        _mapperProfile = mapperProfile;
+        _mapper = mapper;
     }
 
     [HttpPost]
     public async Task<IActionResult> PostAsync([FromBody] MovieCreateModel movieCreateModel)
     {
-        var movieEntity = new MovieEntity
-        {
-            Title = movieCreateModel.Title,
-            Description = movieCreateModel.Description,
-            Year = movieCreateModel.Year,
-        };
+        var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
 
         movieEntity = await _repository.CreateAsync(movieEntity);
 
-        return CreatedAtRoute(nameof(GetAsync), new { id = movieEntity.Id }, movieEntity);
+        var movieResponse = _mapper.Map<MovieModel>(movieEntity);
+
+        return CreatedAtRoute(nameof(GetAsync), new { id = movieResponse.Id }, movieResponse);
     }
 
     [HttpGet("{id}", Name = "GetAsync")]
     public async Task<IActionResult> GetAsync(int id)
     {
         var movie = await _repository.GetByIdAsync(id);
-        var movieModel = _mapperProfile.Map<MovieEntity, MovieModel>(movie);
+        var movieModel = _mapper.Map<MovieEntity, MovieModel>(movie);
 
         return Ok(movieModel);
     }

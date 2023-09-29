@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+﻿using AutoFixture;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Controllers;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
-using Newtonsoft.Json;
 using NSubstitute;
 
 namespace MovieRentalApiTests.Controllers;
@@ -14,6 +14,8 @@ public class MovieControllerTests
 {
     private readonly MovieController _controller;
     private readonly IBaseRepository<MovieEntity> _repository;
+    private readonly Fixture _fixture = new Fixture();
+    private readonly IMapper _mapper;
 
     public MovieControllerTests()
     {
@@ -21,42 +23,31 @@ public class MovieControllerTests
         {
             config.AddProfile<MapperProfile>();
         });
-        IMapper mapper = new Mapper(configuration);
 
+        _mapper = new Mapper(configuration);
         _repository = Substitute.For<IBaseRepository<MovieEntity>>();
-        _controller = new MovieController(_repository, mapper);
+        _controller = new MovieController(_repository, _mapper);
     }
 
 	[Fact]
 	public async Task MovieController_WhenReceivedMovie_ShouldReturnOk()
 	{
 		//Arrange
-        var movie = new MovieCreateModel
-        {
-            Title = "Titanic",
-            Description = "Great movie",
-            Year = 1997
-        };
-
-        var movieExpected = new MovieEntity
-        {
-            Id = 1,
-            Title = movie.Title,
-            Description = movie.Description,
-            Year = movie.Year
-        };
-
-		var expectedResponse = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieExpected.Id }, movieExpected);
-        
-        _repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
+        var movieCreateModel = _fixture.Create<MovieCreateModel>();
+        var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
+        movieEntity.Id = 1;
+        _repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieEntity);
 
         //Act
-        
-        var response = await _controller.PostAsync(movie);
+        var response = await _controller.PostAsync(movieCreateModel);
 
-		//Assert
+        //Assert
         var result = response as CreatedAtRouteResult;
-        var movieResponse = result.Value as MovieEntity;
+        var movieResponse = result.Value as MovieModel;
+
+        var movieExpected = _mapper.Map<MovieModel>(movieEntity);
+		var expectedResponse = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
+
 		Assert.Equivalent(expectedResponse, result);
         Assert.Equivalent(movieExpected, movieResponse);
 	}
@@ -65,16 +56,16 @@ public class MovieControllerTests
     public async Task MovieController_WhenReceivedAnIdentifier_ShouldReturnAnMovieModel()
     {
         //Arrange
-        var movieEntity = new MovieEntity();
-        var modelExpected = new MovieModel();
+        var movieEntity = _fixture.Create<MovieEntity>();
+        var modelExpected = _mapper.Map<MovieModel>(movieEntity);
         _repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
 
         //Act
-        var response = await _controller.GetAsync(modelExpected.Id);
-        var result = response as OkObjectResult;
-        var modelResponse = result.Value as MovieModel;
+        var response = await _controller.GetAsync(movieEntity.Id);
 
         //Assert
+        var result = response as OkObjectResult;
+        var modelResponse = result.Value as MovieModel;
         Assert.Equivalent(modelExpected, modelResponse);
     }
 }
