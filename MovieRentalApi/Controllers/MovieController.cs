@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieRentalApi.Models;
 
 namespace MovieRentalApi.Controllers;
 
@@ -7,7 +8,7 @@ namespace MovieRentalApi.Controllers;
 public class MovieController : ControllerBase
 {
     [HttpPost]
-    public IActionResult Post()
+    public IActionResult Post(MovieCreateModel movieCreateModel)
     {
         return Ok();
     }
