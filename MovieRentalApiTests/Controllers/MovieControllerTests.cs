@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Controllers;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
+using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -35,7 +37,13 @@ public class MovieControllerTests
         repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
 
         //Act
-        var controller = new MovieController(repository);
+        var configuration = new MapperConfiguration(config =>
+        {
+            config.AddProfile<MapperProfile>();
+        });
+        IMapper mapper = new Mapper(configuration);
+
+        var controller = new MovieController(repository, mapper);
         var response = await controller.PostAsync(movie);
 
 		//Assert
@@ -53,7 +61,14 @@ public class MovieControllerTests
         var modelExpected = new MovieModel();
         var repository = Substitute.For<IBaseRepository<MovieEntity>>();
         repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
-        var controller = new MovieController(repository);
+
+        var configuration = new MapperConfiguration(config =>
+        {
+            config.AddProfile<MapperProfile>();
+        });
+        IMapper mapper = new Mapper(configuration);
+
+        var controller = new MovieController(repository, mapper);
 
         //Act
         var response = await controller.GetAsync(modelExpected.Id);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Models;
@@ -10,10 +11,12 @@ namespace MovieRentalApi.Controllers;
 public class MovieController : ControllerBase
 {
     private readonly IBaseRepository<MovieEntity> _repository;
+    private readonly IMapper _mapperProfile;
 
-    public MovieController(IBaseRepository<MovieEntity> repository)
+    public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapperProfile)
     {
         _repository = repository;
+        _mapperProfile = mapperProfile;
     }
 
     [HttpPost]
@@ -35,14 +38,7 @@ public class MovieController : ControllerBase
     public async Task<IActionResult> GetAsync(int id)
     {
         var movie = await _repository.GetByIdAsync(id);
-
-        var movieModel = new MovieModel
-        {
-            Id = movie.Id,
-            Title = movie.Title,
-            Description = movie.Description,
-            Year = movie.Year
-        };
+        var movieModel = _mapperProfile.Map<MovieEntity, MovieModel>(movie);
 
         return Ok(movieModel);
     }
