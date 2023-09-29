@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieRentalApi", "MovieRentalApi\MovieRentalApi.csproj", "{2082B923-2321-4C37-A84A-51BF7C5025B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieRentalApiTests", "MovieRentalApiTests\MovieRentalApiTests.csproj", "{337D127F-47A1-48F7-AD2C-2EEB6897CB62}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{57A2AB9F-66F8-43E3-813D-95AFBCEF153B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0E1CC5F5-D2B8-468C-AC6F-68348881A97A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2082B923-2321-4C37-A84A-51BF7C5025B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2082B923-2321-4C37-A84A-51BF7C5025B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2082B923-2321-4C37-A84A-51BF7C5025B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2082B923-2321-4C37-A84A-51BF7C5025B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{337D127F-47A1-48F7-AD2C-2EEB6897CB62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{337D127F-47A1-48F7-AD2C-2EEB6897CB62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{337D127F-47A1-48F7-AD2C-2EEB6897CB62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{337D127F-47A1-48F7-AD2C-2EEB6897CB62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2082B923-2321-4C37-A84A-51BF7C5025B2} = {57A2AB9F-66F8-43E3-813D-95AFBCEF153B}
+		{337D127F-47A1-48F7-AD2C-2EEB6897CB62} = {0E1CC5F5-D2B8-468C-AC6F-68348881A97A}
+	EndGlobalSection
+EndGlobal
