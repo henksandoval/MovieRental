@@ -32,8 +32,18 @@ public class MovieController : ControllerBase
     }
 
     [HttpGet("{id}", Name = "GetAsync")]
-    public IActionResult GetAsync(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
-        return Ok();
+        var movie = await _repository.GetByIdAsync(id);
+
+        var movieModel = new MovieModel
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Description = movie.Description,
+            Year = movie.Year
+        };
+
+        return Ok(movieModel);
     }
 }

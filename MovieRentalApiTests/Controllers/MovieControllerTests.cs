@@ -44,4 +44,23 @@ public class MovieControllerTests
 		Assert.Equivalent(expectedResponse, result);
         Assert.Equivalent(movieExpected, movieResponse);
 	}
+
+    [Fact]
+    public async Task MovieController_WhenReceivedAnIdentifier_ShouldReturnAnMovieModel()
+    {
+        //Arrange
+        var movieEntity = new MovieEntity();
+        var modelExpected = new MovieModel();
+        var repository = Substitute.For<IBaseRepository<MovieEntity>>();
+        repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
+        var controller = new MovieController(repository);
+
+        //Act
+        var response = await controller.GetAsync(modelExpected.Id);
+        var result = response as OkObjectResult;
+        var modelResponse = result.Value as MovieModel;
+
+        //Assert
+        Assert.Equivalent(modelExpected, modelResponse);
+    }
 }

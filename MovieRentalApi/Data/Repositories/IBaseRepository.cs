@@ -3,5 +3,6 @@
     public interface IBaseRepository<TEntity> where TEntity : class
     {
         Task<TEntity> CreateAsync(TEntity entity);
+        Task<TEntity> GetByIdAsync(int id);
     }
 }

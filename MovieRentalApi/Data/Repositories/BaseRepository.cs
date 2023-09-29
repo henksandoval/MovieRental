@@ -21,5 +21,11 @@ namespace MovieRentalApi.Data.Repositories
             await DbContext.SaveChangesAsync();
             return entity;
         }
+
+        public async Task<TEntity> GetByIdAsync(int id)
+        {
+            var entity = await DbContext.Set<TEntity>().FindAsync(id);
+            return entity;
+        }
     }
 }
