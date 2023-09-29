@@ -40,6 +40,8 @@ public class MovieControllerTests
 
 		//Assert
         var result = response as CreatedAtRouteResult;
+        var movieResponse = result.Value as MovieEntity;
 		Assert.Equivalent(expectedResponse, result);
+        Assert.Equivalent(movieExpected, movieResponse);
 	}
 }
