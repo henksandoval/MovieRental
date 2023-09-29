@@ -1,4 +1,4 @@
-﻿namespace MovieRentalApi.Entities;
+﻿namespace MovieRentalApi.Data.Entities;
 
 public class MovieEntity
 {

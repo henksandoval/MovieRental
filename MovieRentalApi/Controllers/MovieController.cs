@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieRentalApi.Entities;
+using MovieRentalApi.Data.Entities;
+using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Models;
 
 namespace MovieRentalApi.Controllers;
@@ -8,16 +9,24 @@ namespace MovieRentalApi.Controllers;
 [Route("[controller]")]
 public class MovieController : ControllerBase
 {
+    private readonly IBaseRepository<MovieEntity> _repository;
+
+    public MovieController(IBaseRepository<MovieEntity> repository)
+    {
+        _repository = repository;
+    }
+
     [HttpPost]
-    public IActionResult Post(MovieCreateModel movieCreateModel)
+    public async Task<IActionResult> PostAsync(MovieCreateModel movieCreateModel)
     {
         var movieEntity = new MovieEntity
         {
-            Id = 1,
             Title = movieCreateModel.Title,
             Description = movieCreateModel.Description,
             Year = movieCreateModel.Year,
         };
+
+        movieEntity = await _repository.CreateAsync(movieEntity);
 
         return Ok(movieEntity);
     }

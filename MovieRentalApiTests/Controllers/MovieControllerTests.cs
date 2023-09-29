@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Controllers;
-using MovieRentalApi.Entities;
+using MovieRentalApi.Data.Entities;
+using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Models;
 using Newtonsoft.Json;
+using NSubstitute;
 
 namespace MovieRentalApiTests.Controllers;
 
@@ -27,10 +29,13 @@ public class MovieControllerTests
             Description = movie.Description,
             Year = movie.Year
         };
-		
-		//Act
-        var controller = new MovieController();
-        var response = controller.Post(movie);
+
+        var repository = Substitute.For<IBaseRepository<MovieEntity>>();
+        repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
+
+        //Act
+        var controller = new MovieController(repository);
+        var response = await controller.PostAsync(movie);
 
 		//Assert
 		var okResult = response as OkObjectResult;
