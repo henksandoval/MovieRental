@@ -29,7 +29,7 @@ public class MovieControllerTests
             Year = movie.Year
         };
 
-		var expectedResponse = new CreatedResult("https://localhost:5000/Movie/", movieExpected.Id);
+		var expectedResponse = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieExpected.Id }, movieExpected);
 
         var repository = Substitute.For<IBaseRepository<MovieEntity>>();
         repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
@@ -39,6 +39,7 @@ public class MovieControllerTests
         var response = await controller.PostAsync(movie);
 
 		//Assert
-		Assert.Equivalent(expectedResponse, response);
+        var result = response as CreatedAtRouteResult;
+		Assert.Equivalent(expectedResponse, result);
 	}
 }

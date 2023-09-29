@@ -17,7 +17,7 @@ public class MovieController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> PostAsync(MovieCreateModel movieCreateModel)
+    public async Task<IActionResult> PostAsync([FromBody] MovieCreateModel movieCreateModel)
     {
         var movieEntity = new MovieEntity
         {
@@ -28,6 +28,12 @@ public class MovieController : ControllerBase
 
         movieEntity = await _repository.CreateAsync(movieEntity);
 
-        return Created("https://localhost:5000/Movie/", movieEntity.Id);
+        return CreatedAtRoute(nameof(GetAsync), new { id = movieEntity.Id }, movieEntity);
+    }
+
+    [HttpGet("{id}", Name = "GetAsync")]
+    public IActionResult GetAsync(int id)
+    {
+        return Ok();
     }
 }
