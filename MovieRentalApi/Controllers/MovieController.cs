@@ -28,6 +28,6 @@ public class MovieController : ControllerBase
 
         movieEntity = await _repository.CreateAsync(movieEntity);
 
-        return Ok(movieEntity);
+        return Created("https://localhost:5000/Movie/", movieEntity.Id);
     }
 }

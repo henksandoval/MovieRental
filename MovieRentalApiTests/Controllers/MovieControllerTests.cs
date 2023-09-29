@@ -14,7 +14,6 @@ public class MovieControllerTests
 	public async Task MovieController_WhenReceivedMovie_ShouldReturnOk()
 	{
 		//Arrange
-		var expectedResponse = new OkResult();
         var movie = new MovieCreateModel
         {
             Title = "Titanic",
@@ -30,6 +29,8 @@ public class MovieControllerTests
             Year = movie.Year
         };
 
+		var expectedResponse = new CreatedResult("https://localhost:5000/Movie/", movieExpected.Id);
+
         var repository = Substitute.For<IBaseRepository<MovieEntity>>();
         repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
 
@@ -38,10 +39,6 @@ public class MovieControllerTests
         var response = await controller.PostAsync(movie);
 
 		//Assert
-		var okResult = response as OkObjectResult;
-        var movieResponse = okResult.Value as MovieEntity;
-
 		Assert.Equivalent(expectedResponse, response);
-		Assert.Equivalent(movieExpected, movieResponse);
 	}
 }
