@@ -12,6 +12,21 @@ namespace MovieRentalApiTests.Controllers;
 
 public class MovieControllerTests
 {
+    private readonly MovieController _controller;
+    private readonly IBaseRepository<MovieEntity> _repository;
+
+    public MovieControllerTests()
+    {
+        var configuration = new MapperConfiguration(config =>
+        {
+            config.AddProfile<MapperProfile>();
+        });
+        IMapper mapper = new Mapper(configuration);
+
+        _repository = Substitute.For<IBaseRepository<MovieEntity>>();
+        _controller = new MovieController(_repository, mapper);
+    }
+
 	[Fact]
 	public async Task MovieController_WhenReceivedMovie_ShouldReturnOk()
 	{
@@ -32,19 +47,12 @@ public class MovieControllerTests
         };
 
 		var expectedResponse = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieExpected.Id }, movieExpected);
-
-        var repository = Substitute.For<IBaseRepository<MovieEntity>>();
-        repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
+        
+        _repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieExpected);
 
         //Act
-        var configuration = new MapperConfiguration(config =>
-        {
-            config.AddProfile<MapperProfile>();
-        });
-        IMapper mapper = new Mapper(configuration);
-
-        var controller = new MovieController(repository, mapper);
-        var response = await controller.PostAsync(movie);
+        
+        var response = await _controller.PostAsync(movie);
 
 		//Assert
         var result = response as CreatedAtRouteResult;
@@ -59,19 +67,10 @@ public class MovieControllerTests
         //Arrange
         var movieEntity = new MovieEntity();
         var modelExpected = new MovieModel();
-        var repository = Substitute.For<IBaseRepository<MovieEntity>>();
-        repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
-
-        var configuration = new MapperConfiguration(config =>
-        {
-            config.AddProfile<MapperProfile>();
-        });
-        IMapper mapper = new Mapper(configuration);
-
-        var controller = new MovieController(repository, mapper);
+        _repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
 
         //Act
-        var response = await controller.GetAsync(modelExpected.Id);
+        var response = await _controller.GetAsync(modelExpected.Id);
         var result = response as OkObjectResult;
         var modelResponse = result.Value as MovieModel;
 
