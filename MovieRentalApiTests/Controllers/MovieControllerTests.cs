@@ -68,4 +68,23 @@ public class MovieControllerTests
         var modelResponse = result.Value as MovieModel;
         Assert.Equivalent(modelExpected, modelResponse);
     }
+
+    [Fact]
+    public async Task MovieController_WheReceiveAMovieWithoutTitle_ShouldReturnBadRequest()
+    {
+        //Arrange
+        var movieCreateModel = _fixture.Create<MovieCreateModel>();
+        movieCreateModel.Title = null;
+        var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
+        movieEntity.Id = 1;
+        _repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieEntity);
+
+        //Act
+        var response = await _controller.PostAsync(movieCreateModel);
+
+        //Assert
+        var result = response as BadRequestObjectResult;
+        var expectedResponse = new BadRequestResult();
+        Assert.Equivalent(expectedResponse, result);
+    }
 }
