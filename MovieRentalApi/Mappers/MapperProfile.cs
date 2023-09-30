@@ -10,6 +10,8 @@ namespace MovieRentalApi.Mappers
         {
             CreateMap<MovieEntity, MovieModel>().ReverseMap();
             CreateMap<MovieEntity, MovieCreateModel>().ReverseMap();
+            CreateMap<CategoryEntity, CategoryModel>().ReverseMap();
+            CreateMap<CategoryEntity, CategoryCreateModel>().ReverseMap();
         }
     }
 }

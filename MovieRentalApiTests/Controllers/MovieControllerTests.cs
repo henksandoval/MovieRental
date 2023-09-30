@@ -34,6 +34,7 @@ public class MovieControllerTests
 	{
 		//Arrange
         var movieCreateModel = _fixture.Create<MovieCreateModel>();
+
         var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
         movieEntity.Id = 1;
         _repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieEntity);
@@ -56,7 +57,12 @@ public class MovieControllerTests
     public async Task MovieController_WhenReceivedAnIdentifier_ShouldReturnAnMovieModel()
     {
         //Arrange
+        _fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+            .ForEach(b => _fixture.Behaviors.Remove(b));
+        _fixture.Behaviors.Add(new OmitOnRecursionBehavior(1));
+
         var movieEntity = _fixture.Create<MovieEntity>();
+
         var modelExpected = _mapper.Map<MovieModel>(movieEntity);
         _repository.GetByIdAsync(Arg.Any<int>()).Returns(movieEntity);
 
