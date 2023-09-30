@@ -1,39 +1,47 @@
-﻿using MovieRentalApi.Models;
+﻿using MovieRentalApi.Mappers;
+using MovieRentalApi.Models;
 using MovieRentalApi.Services;
 
 namespace MovieRentalApiTests.Services;
 
 using System.Threading.Tasks;
+using AutoFixture;
+using AutoMapper;
+using MovieRentalApi.Data.Entities;
+using MovieRentalApi.Data.Repositories;
+using NSubstitute;
 
 public class MovieRentalServiceTests
 {
+    private readonly Fixture _fixture = new Fixture();
+    private readonly IBaseRepository<MovieEntity> _repository;
+    private readonly MovieRentalService _service;
+    private readonly IMapper _mapper;
+
+    public MovieRentalServiceTests()
+    {
+        var configuration = new MapperConfiguration(config =>
+        {
+            config.AddProfile<MapperProfile>();
+        });
+
+        _mapper = new Mapper(configuration);
+        _repository = Substitute.For<IBaseRepository<MovieEntity>>();
+        _service = new MovieRentalService(_repository, _mapper);
+    }
+
     [Fact]
     public async Task MovieRentalService_WhenReceivedIdMovie_ShouldReturnTheMovie()
     {
         //Arrange
-        int idMovie = 1;
-        var service = new MovieRentalService();
+        var expectedResponse = _fixture.Create<MovieModel>();
+        var entity = _mapper.Map<MovieEntity>(expectedResponse);
+        _repository.GetByIdAsync(expectedResponse.Id).Returns(entity);
 
         //Act
-        MovieModel response = await service.FindMovieAsync(idMovie);
+        var response = await _service.FindMovieAsync(expectedResponse.Id);
 
         //Assert
-        var expectedResponse = new MovieModel { Id = idMovie };
-        Assert.Equivalent(expectedResponse, response);
-    }
-
-    [Fact]
-    public async Task MovieRentalService_WhenReceivedIdMovie_ShouldReturnTheMovie2()
-    {
-        //Arrange
-        int idMovie = 2;
-        var service = new MovieRentalService();
-
-        //Act
-        MovieModel response = await service.FindMovieAsync(idMovie);
-
-        //Assert
-        var expectedResponse = new MovieModel { Id = idMovie };
         Assert.Equivalent(expectedResponse, response);
     }
 }
