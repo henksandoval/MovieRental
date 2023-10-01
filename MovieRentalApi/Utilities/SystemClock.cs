@@ -2,5 +2,8 @@
 
 public class SystemClock : IClock
 {
-	public DateTime GetCurrentTime() => DateTime.Now;
+	public DateTime GetCurrentTime()
+	{
+		return DateTime.Now;
+	}
 }

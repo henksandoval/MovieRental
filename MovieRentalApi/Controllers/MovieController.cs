@@ -10,33 +10,33 @@ namespace MovieRentalApi.Controllers;
 [Route("[controller]")]
 public class MovieController : ControllerBase
 {
-    private readonly IBaseRepository<MovieEntity> _repository;
-    private readonly IMapper _mapper;
+	private readonly IMapper mapper;
+	private readonly IBaseRepository<MovieEntity> repository;
 
-    public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapper)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
+	public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapper)
+	{
+		this.repository = repository;
+		this.mapper = mapper;
+	}
 
-    [HttpPost]
-    public async Task<IActionResult> PostAsync([FromBody] MovieCreateModel movieCreateModel)
-    {
-        var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
+	[HttpPost]
+	public async Task<IActionResult> PostAsync([FromBody] MovieCreateModel movieCreateModel)
+	{
+		var movieEntity = mapper.Map<MovieEntity>(movieCreateModel);
 
-        movieEntity = await _repository.CreateAsync(movieEntity);
+		movieEntity = await repository.CreateAsync(movieEntity);
 
-        var movieResponse = _mapper.Map<MovieModel>(movieEntity);
+		var movieResponse = mapper.Map<MovieModel>(movieEntity);
 
-        return CreatedAtRoute(nameof(GetAsync), new { id = movieResponse.Id }, movieResponse);
-    }
+		return CreatedAtRoute(nameof(GetAsync), new { id = movieResponse.Id }, movieResponse);
+	}
 
-    [HttpGet("{id}", Name = "GetAsync")]
-    public async Task<IActionResult> GetAsync(int id)
-    {
-        var movie = await _repository.GetByIdAsync(id);
-        var movieModel = _mapper.Map<MovieEntity, MovieModel>(movie);
+	[HttpGet("{id}", Name = "GetMoviesAsync")]
+	public async Task<IActionResult> GetAsync(int id)
+	{
+		var movie = await repository.GetByIdAsync(id);
+		var movieModel = mapper.Map<MovieEntity, MovieModel>(movie);
 
-        return Ok(movieModel);
-    }
+		return Ok(movieModel);
+	}
 }

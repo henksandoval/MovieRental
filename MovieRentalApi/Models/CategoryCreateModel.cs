@@ -1,7 +1,6 @@
-﻿namespace MovieRentalApi.Models
+﻿namespace MovieRentalApi.Models;
+
+public class CategoryCreateModel
 {
-    public class CategoryCreateModel
-    {
-        public string Name { get; set; }
-    }
+	public string Name { get; set; }
 }
