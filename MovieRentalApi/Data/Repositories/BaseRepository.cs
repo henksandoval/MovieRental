@@ -28,9 +28,10 @@ namespace MovieRentalApi.Data.Repositories
             return entity;
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public async Task<bool> UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            DbContext.Entry(entity).State = EntityState.Modified;
+            return await DbContext.SaveChangesAsync() > 0;
         }
     }
 }
