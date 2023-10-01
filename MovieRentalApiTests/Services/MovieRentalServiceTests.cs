@@ -31,34 +31,50 @@ public class MovieRentalServiceTests
         _service = new MovieRentalService(_repository, _mapper);
     }
 
-    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponoble, debería responder la pelicula")]
+    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponoble, debería responder la pelicula.")]
     public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
     {
-        //Arrange
+        //Arrange (Preparar)
         var idMovie = 1;
         var entity = new MovieEntity{ IsAvailable = true };
         _repository.GetByIdAsync(idMovie).Returns(entity);
         
-        //Act
+        //Act (Actuar)
         var movieResponse = await _service.FindMovieAsync(idMovie);
         
-        //Assert
+        //Assert (Asegurar)
         var expectedMovie = new MovieModel();
         movieResponse.Should().BeEquivalentTo(expectedMovie);
     }
-    
-    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponoble, debería responder nulo")]
+
+    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponoble, debería responder nulo.")]
     public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
     {
-        //Arrange
+        //Arrange (Preparar)
         var idMovie = 1;
         var entity = new MovieEntity{ IsAvailable = false };
         _repository.GetByIdAsync(idMovie).Returns(entity);
         
-        //Act
+        //Act (Actuar)
         var movieResponse = await _service.FindMovieAsync(idMovie);
         
-        //Assert
+        //Assert (Asegurar)
         movieResponse.Should().BeNull();
+    }
+
+    [Fact(DisplayName =
+        "MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
+    public async Task MovieRentalService_WhenMovieIsAvailable_ShouldSaveInDatabase()
+    {
+        //Arrange (Preparar)
+        const int idMovie = 1;
+        var entity = new MovieEntity{ IsAvailable = true };
+        _repository.GetByIdAsync(idMovie).Returns(entity);
+
+        //Act (Actuar)
+        _ = await _service.FindMovieAsync(idMovie);
+        
+        //Assert (Asegurar)
+        await _repository.Received(1).UpdateAsync(Arg.Is<MovieEntity>(e => !e.IsAvailable));
     }
 }

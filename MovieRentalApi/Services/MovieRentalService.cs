@@ -23,7 +23,10 @@ public class MovieRentalService
         if (!entity.IsAvailable)
             return null;
 
+        entity.IsAvailable = false;
         var movie = _mapper.Map<MovieModel>(entity);
+        await _repository.UpdateAsync(entity);
+
         return movie;
     }
 }
