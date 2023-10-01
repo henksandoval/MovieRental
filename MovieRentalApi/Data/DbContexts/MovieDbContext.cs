@@ -7,6 +7,7 @@ namespace MovieRentalApi.Data.DbContexts
     {
         public DbSet<CategoryEntity> Category { get; set; }
         public DbSet<MovieEntity> Movies { get; set; }
+        public DbSet<RentalEntity> Rentals { get; set; }
 
         public MovieDbContext(DbContextOptions options) : base(options)
         {

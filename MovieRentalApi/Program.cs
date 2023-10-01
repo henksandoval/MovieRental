@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieRentalApi.Data.DbContexts;
 using MovieRentalApi.Data.Repositories;
+using MovieRentalApi.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
