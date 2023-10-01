@@ -1,12 +1,10 @@
-﻿using AutoFixture;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Controllers;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
-using NSubstitute;
 
 namespace MovieRentalApiTests.Controllers;
 
@@ -41,14 +39,14 @@ public class MovieControllerTests
 
 		//Assert
 		var result = response as CreatedAtRouteResult;
-		var movieResponse = result.Value as MovieModel;
+		var movieResponse = result?.Value as MovieModel;
 
 		var movieExpected = mapper.Map<MovieModel>(movieEntity);
-		var expectedResponse =
+		var expectedResult =
 			new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
 
-		Assert.Equivalent(expectedResponse, result);
-		Assert.Equivalent(movieExpected, movieResponse);
+		result.Should().BeEquivalentTo(expectedResult);
+		movieResponse.Should().BeEquivalentTo(movieExpected);
 	}
 
 	[Fact]
@@ -69,7 +67,7 @@ public class MovieControllerTests
 
 		//Assert
 		var result = response as OkObjectResult;
-		var modelResponse = result.Value as MovieModel;
-		Assert.Equivalent(modelExpected, modelResponse);
+		var modelResponse = result?.Value as MovieModel;
+		modelResponse.Should().BeEquivalentTo(modelExpected);
 	}
 }

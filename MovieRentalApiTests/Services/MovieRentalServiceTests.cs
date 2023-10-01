@@ -1,19 +1,16 @@
 ﻿using AutoMapper;
-using FluentAssertions;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
 using MovieRentalApi.Services;
 using MovieRentalApi.Utilities;
-using NSubstitute;
 
 namespace MovieRentalApiTests.Services;
 
 public class MovieRentalServiceTests
 {
 	private readonly IClock clock;
-	private readonly IMapper mapper;
 	private readonly IBaseRepository<MovieEntity> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 	private readonly MovieRentalService service;
@@ -22,7 +19,7 @@ public class MovieRentalServiceTests
 	{
 		var configuration = new MapperConfiguration(config => { config.AddProfile<MapperProfile>(); });
 
-		mapper = new Mapper(configuration);
+		IMapper mapper = new Mapper(configuration);
 		repositoryMovie = Substitute.For<IBaseRepository<MovieEntity>>();
 		repositoryRental = Substitute.For<IBaseRepository<RentalEntity>>();
 		clock = Substitute.For<IClock>();
@@ -34,7 +31,7 @@ public class MovieRentalServiceTests
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
 	{
 		//Arrange (Preparar)
-		var idMovie = 1;
+		const int idMovie = 1;
 		var entity = new MovieEntity { IsAvailable = true };
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 
@@ -50,7 +47,7 @@ public class MovieRentalServiceTests
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
 	{
 		//Arrange (Preparar)
-		var idMovie = 1;
+		const int idMovie = 1;
 		var entity = new MovieEntity { IsAvailable = false };
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 
@@ -83,9 +80,8 @@ public class MovieRentalServiceTests
 		//Arrange (Preparar)
 		const int idMovie = 1;
 		var entity = new MovieEntity { IsAvailable = true };
-		var expectedDate = new DateTime(1995, 05, 16, 0, 0, 0, DateTimeKind.Utc);
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
-
+		var expectedDate = new DateTime(1995, 05, 16, 0, 0, 0, DateTimeKind.Utc);
 		clock.GetCurrentTime().Returns(expectedDate);
 
 		//Act (Actuar)
