@@ -31,7 +31,7 @@ public class MovieRentalServiceTests
         _service = new MovieRentalService(_repository, _mapper);
     }
 
-    [Fact]
+    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponoble, debería responder la pelicula")]
     public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
     {
         //Arrange
@@ -40,14 +40,14 @@ public class MovieRentalServiceTests
         _repository.GetByIdAsync(idMovie).Returns(entity);
         
         //Act
-        var movieReponse = await _service.FindMovieAsync(idMovie);
+        var movieResponse = await _service.FindMovieAsync(idMovie);
         
         //Assert
         var expectedMovie = new MovieModel();
-        movieReponse.Should().BeEquivalentTo(expectedMovie);
+        movieResponse.Should().BeEquivalentTo(expectedMovie);
     }
     
-    [Fact]
+    [Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponoble, debería responder nulo")]
     public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
     {
         //Arrange
@@ -56,9 +56,9 @@ public class MovieRentalServiceTests
         _repository.GetByIdAsync(idMovie).Returns(entity);
         
         //Act
-        var movieReponse = await _service.FindMovieAsync(idMovie);
+        var movieResponse = await _service.FindMovieAsync(idMovie);
         
         //Assert
-        movieReponse.Should().BeNull();
+        movieResponse.Should().BeNull();
     }
 }
