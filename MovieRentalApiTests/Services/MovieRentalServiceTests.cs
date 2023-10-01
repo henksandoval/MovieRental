@@ -1,4 +1,5 @@
-﻿using MovieRentalApi.Mappers;
+﻿using FluentAssertions;
+using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
 using MovieRentalApi.Services;
 
@@ -31,17 +32,33 @@ public class MovieRentalServiceTests
     }
 
     [Fact]
-    public async Task MovieRentalService_WhenReceivedIdMovie_ShouldReturnTheMovie()
+    public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
     {
         //Arrange
-        var expectedResponse = _fixture.Create<MovieModel>();
-        var entity = _mapper.Map<MovieEntity>(expectedResponse);
-        _repository.GetByIdAsync(expectedResponse.Id).Returns(entity);
-
+        var idMovie = 1;
+        var entity = new MovieEntity{ IsAvailable = true };
+        _repository.GetByIdAsync(idMovie).Returns(entity);
+        
         //Act
-        var response = await _service.FindMovieAsync(expectedResponse.Id);
-
+        var movieReponse = await _service.FindMovieAsync(idMovie);
+        
         //Assert
-        Assert.Equivalent(expectedResponse, response);
+        var expectedMovie = new MovieModel();
+        movieReponse.Should().BeEquivalentTo(expectedMovie);
+    }
+    
+    [Fact]
+    public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
+    {
+        //Arrange
+        var idMovie = 1;
+        var entity = new MovieEntity{ IsAvailable = false };
+        _repository.GetByIdAsync(idMovie).Returns(entity);
+        
+        //Act
+        var movieReponse = await _service.FindMovieAsync(idMovie);
+        
+        //Assert
+        movieReponse.Should().BeNull();
     }
 }

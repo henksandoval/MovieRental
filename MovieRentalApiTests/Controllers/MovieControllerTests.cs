@@ -33,7 +33,7 @@ public class MovieControllerTests
 	public async Task MovieController_WhenReceivedMovie_ShouldReturnOk()
 	{
 		//Arrange
-        var movieCreateModel = _fixture.Create<MovieCreateModel>();
+		var movieCreateModel = _fixture.Create<MovieCreateModel>();
 
         var movieEntity = _mapper.Map<MovieEntity>(movieCreateModel);
         movieEntity.Id = 1;

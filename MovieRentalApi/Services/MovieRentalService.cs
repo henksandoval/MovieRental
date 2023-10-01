@@ -20,6 +20,9 @@ public class MovieRentalService
     {
         var entity = await _repository.GetByIdAsync(idMovie);
 
+        if (!entity.IsAvailable)
+            return null;
+
         var movie = _mapper.Map<MovieModel>(entity);
         return movie;
     }
