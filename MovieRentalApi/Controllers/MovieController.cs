@@ -11,9 +11,9 @@ namespace MovieRentalApi.Controllers;
 public class MovieController : ControllerBase
 {
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<MovieEntity?> repository;
+	private readonly IBaseRepository<MovieEntity> repository;
 
-	public MovieController(IBaseRepository<MovieEntity?> repository, IMapper mapper)
+	public MovieController(IBaseRepository<MovieEntity> repository, IMapper mapper)
 	{
 		this.repository = repository;
 		this.mapper = mapper;
@@ -24,7 +24,7 @@ public class MovieController : ControllerBase
 	{
 		var movieEntity = mapper.Map<MovieEntity>(movieCreateModel);
 
-		movieEntity = await repository.CreateAsync(movieEntity);
+		await repository.CreateAsync(movieEntity);
 
 		var movieResponse = mapper.Map<MovieModel>(movieEntity);
 

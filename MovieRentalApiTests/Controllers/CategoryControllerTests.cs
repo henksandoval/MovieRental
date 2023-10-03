@@ -13,7 +13,7 @@ public class CategoryControllerTests
 	private readonly CategoryController controller;
 	private readonly Fixture fixture = new();
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<CategoryEntity?> repository;
+	private readonly IBaseRepository<CategoryEntity> repository;
 
 	public CategoryControllerTests()
 	{
@@ -30,8 +30,6 @@ public class CategoryControllerTests
 		//Arrange
 		var createModel = fixture.Create<CategoryCreateModel>();
 		var entity = mapper.Map<CategoryEntity>(createModel);
-		entity.Id = 1;
-		repository.CreateAsync(Arg.Any<CategoryEntity>()).Returns(entity);
 
 		//Act
 		var response = await controller.PostAsync(createModel);

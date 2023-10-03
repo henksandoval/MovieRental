@@ -11,7 +11,7 @@ namespace MovieRentalApiTests.Services;
 public class MovieRentalServiceTests
 {
 	private readonly IClock clock;
-	private readonly IBaseRepository<MovieEntity?> repositoryMovie;
+	private readonly IBaseRepository<MovieEntity> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 	private readonly MovieRentalService service;
 

@@ -13,7 +13,7 @@ public class MovieControllerTests
 	private readonly MovieController controller;
 	private readonly Fixture fixture = new();
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<MovieEntity?> repository;
+	private readonly IBaseRepository<MovieEntity> repository;
 
 	public MovieControllerTests()
 	{
@@ -29,10 +29,7 @@ public class MovieControllerTests
 	{
 		//Arrange
 		var movieCreateModel = fixture.Create<MovieCreateModel>();
-
 		var movieEntity = mapper.Map<MovieEntity>(movieCreateModel);
-		movieEntity.Id = 1;
-		repository.CreateAsync(Arg.Any<MovieEntity>()).Returns(movieEntity);
 
 		//Act
 		var response = await controller.PostAsync(movieCreateModel);

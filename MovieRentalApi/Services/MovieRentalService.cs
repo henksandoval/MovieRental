@@ -10,10 +10,10 @@ public class MovieRentalService
 {
 	private readonly IClock clock;
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<MovieEntity?> repositoryMovie;
+	private readonly IBaseRepository<MovieEntity> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 
-	public MovieRentalService(IBaseRepository<MovieEntity?> repositoryMovie,
+	public MovieRentalService(IBaseRepository<MovieEntity> repositoryMovie,
 		IBaseRepository<RentalEntity> repositoryRental,
 		IClock clock,
 		IMapper mapper)
@@ -35,8 +35,10 @@ public class MovieRentalService
 		var movie = mapper.Map<MovieModel>(movieEntity);
 		var rentalEntity = new RentalEntity { RentalDate = clock.GetCurrentTime() };
 
+		var transaction = await repositoryMovie.BeginTransactionAsync();
 		await repositoryMovie.UpdateAsync(movieEntity);
 		await repositoryRental.CreateAsync(rentalEntity);
+		await repositoryMovie.CommitAsync(transaction);
 
 		return movie;
 	}

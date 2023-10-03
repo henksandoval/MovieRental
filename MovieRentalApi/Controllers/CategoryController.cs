@@ -11,9 +11,9 @@ namespace MovieRentalApi.Controllers;
 public class CategoryController : ControllerBase
 {
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<CategoryEntity?> repository;
+	private readonly IBaseRepository<CategoryEntity> repository;
 
-	public CategoryController(IBaseRepository<CategoryEntity?> repository, IMapper mapper)
+	public CategoryController(IBaseRepository<CategoryEntity> repository, IMapper mapper)
 	{
 		this.repository = repository;
 		this.mapper = mapper;
@@ -24,7 +24,7 @@ public class CategoryController : ControllerBase
 	{
 		var entity = mapper.Map<CategoryEntity>(createModel);
 
-		entity = await repository.CreateAsync(entity);
+		await repository.CreateAsync(entity);
 
 		var movieResponse = mapper.Map<CategoryModel>(entity);
 
