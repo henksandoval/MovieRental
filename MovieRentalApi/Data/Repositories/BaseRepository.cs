@@ -5,31 +5,31 @@ namespace MovieRentalApi.Data.Repositories;
 
 public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
 {
-	protected readonly MovieDbContext DbContext;
+	private readonly MovieDbContext dbContext;
 	protected readonly DbSet<TEntity> DbSet;
 
 	public BaseRepository(MovieDbContext dbContext)
 	{
-		DbContext = dbContext;
+		this.dbContext = dbContext;
 		DbSet = dbContext.Set<TEntity>();
 	}
 
 	public async Task<TEntity> CreateAsync(TEntity entity)
 	{
-		await DbContext.Set<TEntity>().AddAsync(entity);
-		await DbContext.SaveChangesAsync();
+		await dbContext.Set<TEntity>().AddAsync(entity);
+		await dbContext.SaveChangesAsync();
 		return entity;
 	}
 
-	public async Task<TEntity> GetByIdAsync(int id)
+	public async Task<TEntity?> GetByIdAsync(int id)
 	{
-		var entity = await DbContext.Set<TEntity>().FindAsync(id);
+		var entity = await dbContext.Set<TEntity>().FindAsync(id);
 		return entity;
 	}
 
 	public async Task<bool> UpdateAsync(TEntity entity)
 	{
-		DbContext.Entry(entity).State = EntityState.Modified;
-		return await DbContext.SaveChangesAsync() > 0;
+		dbContext.Entry(entity).State = EntityState.Modified;
+		return await dbContext.SaveChangesAsync() > 0;
 	}
 }

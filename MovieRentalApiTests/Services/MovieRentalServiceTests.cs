@@ -11,7 +11,7 @@ namespace MovieRentalApiTests.Services;
 public class MovieRentalServiceTests
 {
 	private readonly IClock clock;
-	private readonly IBaseRepository<MovieEntity> repositoryMovie;
+	private readonly IBaseRepository<MovieEntity?> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 	private readonly MovieRentalService service;
 
@@ -27,7 +27,7 @@ public class MovieRentalServiceTests
 	}
 
 	[Fact(DisplayName =
-		"MovieRentalService Cuando Solicitan Un Id de Pelicula Disponoble, debería responder la pelicula.")]
+		"MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debería responder la pelicula.")]
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
 	{
 		//Arrange (Preparar)
@@ -36,7 +36,7 @@ public class MovieRentalServiceTests
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 
 		//Act (Actuar)
-		var movieResponse = await service.FindMovieAsync(idMovie);
+		var movieResponse = await service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
 		var expectedMovie = new MovieModel();
@@ -52,7 +52,7 @@ public class MovieRentalServiceTests
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 
 		//Act (Actuar)
-		var movieResponse = await service.FindMovieAsync(idMovie);
+		var movieResponse = await service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
 		movieResponse.Should().BeNull();
@@ -68,7 +68,7 @@ public class MovieRentalServiceTests
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 
 		//Act (Actuar)
-		_ = await service.FindMovieAsync(idMovie);
+		_ = await service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
 		await repositoryMovie.Received(1).UpdateAsync(Arg.Is<MovieEntity>(e => !e.IsAvailable));
@@ -85,7 +85,7 @@ public class MovieRentalServiceTests
 		clock.GetCurrentTime().Returns(expectedDate);
 
 		//Act (Actuar)
-		_ = await service.FindMovieAsync(idMovie);
+		_ = await service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
 		await repositoryRental.Received(1).CreateAsync(Arg.Is<RentalEntity>(r => r.RentalDate == expectedDate));

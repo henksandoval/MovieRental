@@ -10,10 +10,10 @@ public class MovieRentalService
 {
 	private readonly IClock clock;
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<MovieEntity> repositoryMovie;
+	private readonly IBaseRepository<MovieEntity?> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 
-	public MovieRentalService(IBaseRepository<MovieEntity> repositoryMovie,
+	public MovieRentalService(IBaseRepository<MovieEntity?> repositoryMovie,
 		IBaseRepository<RentalEntity> repositoryRental,
 		IClock clock,
 		IMapper mapper)
@@ -24,7 +24,7 @@ public class MovieRentalService
 		this.mapper = mapper;
 	}
 
-	public async Task<MovieModel> FindMovieAsync(int idMovie)
+	public async Task<MovieModel> RentalMovieAsync(int idMovie)
 	{
 		var movieEntity = await repositoryMovie.GetByIdAsync(idMovie);
 

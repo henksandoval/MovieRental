@@ -13,7 +13,7 @@ public class CategoryControllerTests
 	private readonly CategoryController controller;
 	private readonly Fixture fixture = new();
 	private readonly IMapper mapper;
-	private readonly IBaseRepository<CategoryEntity> repository;
+	private readonly IBaseRepository<CategoryEntity?> repository;
 
 	public CategoryControllerTests()
 	{
