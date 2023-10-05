@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
+using MovieRentalApi.Exceptions;
 using MovieRentalApi.Models;
 using MovieRentalApi.Utilities;
 
@@ -26,8 +27,8 @@ public class MovieRentalService
 
 	public async Task<MovieModel> RentalMovieAsync(int idMovie)
 	{
-		if (await repositoryMovie.GetByIdAsync(idMovie) is not { IsAvailable: false } movieEntity)
-			return null;
+		if (await repositoryMovie.GetByIdAsync(idMovie) is not { IsAvailable: true } movieEntity)
+			throw new MovieNotFoundException($"The Movie {idMovie} is not available.");
 
 		movieEntity.IsAvailable = false;
 		var movie = mapper.Map<MovieModel>(movieEntity);

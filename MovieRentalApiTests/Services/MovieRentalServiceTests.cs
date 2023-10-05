@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
+using MovieRentalApi.Exceptions;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
 using MovieRentalApi.Services;
@@ -43,33 +44,20 @@ public class MovieRentalServiceTests
 		movieResponse.Should().BeEquivalentTo(expectedMovie);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponible, debe responder nulo.")]
-	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
-	{
-		//Arrange (Preparar)
-		const int idMovie = 1;
-		var entity = new MovieEntity { IsAvailable = false };
-		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
-
-		//Act (Actuar)
-		var movieResponse = await service.RentalMovieAsync(idMovie);
-
-		//Assert (Asegurar)
-		movieResponse.Should().BeNull();
-	}
-
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Databae, debe responder nulo.")]
-	public async Task MovieRentalService_WhenRepositoryReturnNullMovieEntity_ShouldReturnNull()
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Databae, debe arrojar (throw) una exception.")]
+	public async Task MovieRentalService_WhenRepositoryReturnNullMovieEntity_ShouldThrowException()
 	{
 		//Arrange (Preparar)
 		const int idMovie = 1;
 		repositoryMovie.GetByIdAsync(idMovie).ReturnsNull();
 
 		//Act (Actuar)
-		var movieResponse = await service.RentalMovieAsync(idMovie);
+		var action = () => service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
-		movieResponse.Should().BeNull();
+		await action.Should()
+			.ThrowAsync<MovieNotFoundException>()
+			.WithMessage($"The Movie {idMovie} is not available.");
 	}
 
 	[Fact(DisplayName = "MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
