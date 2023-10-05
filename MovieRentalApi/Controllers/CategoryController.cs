@@ -23,7 +23,6 @@ public class CategoryController : ControllerBase
 	public async Task<IActionResult> PostAsync(CategoryCreateModel createModel)
 	{
 		var entity = mapper.Map<CategoryEntity>(createModel);
-
 		await repository.CreateAsync(entity);
 
 		var movieResponse = mapper.Map<CategoryModel>(entity);

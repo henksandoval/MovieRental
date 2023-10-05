@@ -25,7 +25,7 @@ public class CategoryControllerTests
 	}
 
 	[Fact]
-	public async Task CategoryController_WhenReceiveACategoryCreateModel_ShouldReturnOk()
+	public async Task CategoryController_WhenReceiveACategoryCreateModel_ShouldReturnCreatedAtResult()
 	{
 		//Arrange
 		var createModel = fixture.Create<CategoryCreateModel>();
@@ -35,15 +35,14 @@ public class CategoryControllerTests
 		var response = await controller.PostAsync(createModel);
 
 		//Assert
+		var expectedModel = mapper.Map<CategoryModel>(entity);
+		var expectedResult = new CreatedAtRouteResult(nameof(CategoryController.GetAsync), new { id = entity.Id }, expectedModel);
+
 		var result = response as CreatedAtRouteResult;
 		var modelResult = result?.Value as CategoryModel;
 
-		var expectedModel = mapper.Map<CategoryModel>(entity);
-		var expectedResult =
-			new CreatedAtRouteResult(nameof(CategoryController.GetAsync), new { id = entity.Id }, expectedModel);
-
-		result.Should().BeEquivalentTo(expectedResult);
 		modelResult.Should().BeEquivalentTo(expectedModel);
+		result.Should().BeEquivalentTo(expectedResult);
 	}
 
 	[Fact]

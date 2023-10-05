@@ -25,7 +25,7 @@ public class MovieControllerTests
 	}
 
 	[Fact]
-	public async Task MovieController_WhenReceivedMovie_ShouldReturnOk()
+	public async Task MovieController_WhenReceivedMovie_ShouldReturnCreatedAtResult()
 	{
 		//Arrange
 		var movieCreateModel = fixture.Create<MovieCreateModel>();
@@ -39,8 +39,7 @@ public class MovieControllerTests
 		var movieResponse = result?.Value as MovieModel;
 
 		var movieExpected = mapper.Map<MovieModel>(movieEntity);
-		var expectedResult =
-			new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
+		var expectedResult = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
 
 		result.Should().BeEquivalentTo(expectedResult);
 		movieResponse.Should().BeEquivalentTo(movieExpected);
