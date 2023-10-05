@@ -5,6 +5,7 @@ using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
 using MovieRentalApi.Services;
 using MovieRentalApi.Utilities;
+using NSubstitute.ReturnsExtensions;
 
 namespace MovieRentalApiTests.Services;
 
@@ -26,7 +27,7 @@ public class MovieRentalServiceTests
 		service = new MovieRentalService(repositoryMovie, repositoryRental, clock, mapper);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debería responder la pelicula.")]
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debe responder la pelicula.")]
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
 	{
 		//Arrange (Preparar)
@@ -42,13 +43,27 @@ public class MovieRentalServiceTests
 		movieResponse.Should().BeEquivalentTo(expectedMovie);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponoble, debería responder nulo.")]
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula No Disponible, debe responder nulo.")]
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsNotAvailable_ShouldReturnNull()
 	{
 		//Arrange (Preparar)
 		const int idMovie = 1;
 		var entity = new MovieEntity { IsAvailable = false };
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
+
+		//Act (Actuar)
+		var movieResponse = await service.RentalMovieAsync(idMovie);
+
+		//Assert (Asegurar)
+		movieResponse.Should().BeNull();
+	}
+
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Databae, debe responder nulo.")]
+	public async Task MovieRentalService_WhenRepositoryReturnNullMovieEntity_ShouldReturnNull()
+	{
+		//Arrange (Preparar)
+		const int idMovie = 1;
+		repositoryMovie.GetByIdAsync(idMovie).ReturnsNull();
 
 		//Act (Actuar)
 		var movieResponse = await service.RentalMovieAsync(idMovie);
