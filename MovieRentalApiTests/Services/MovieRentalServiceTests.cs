@@ -26,8 +26,7 @@ public class MovieRentalServiceTests
 		service = new MovieRentalService(repositoryMovie, repositoryRental, clock, mapper);
 	}
 
-	[Fact(DisplayName =
-		"MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debería responder la pelicula.")]
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debería responder la pelicula.")]
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
 	{
 		//Arrange (Preparar)
@@ -58,8 +57,7 @@ public class MovieRentalServiceTests
 		movieResponse.Should().BeNull();
 	}
 
-	[Fact(DisplayName =
-		"MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
+	[Fact(DisplayName = "MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
 	public async Task MovieRentalService_WhenMovieIsAvailable_ShouldSaveInDatabase()
 	{
 		//Arrange (Preparar)
