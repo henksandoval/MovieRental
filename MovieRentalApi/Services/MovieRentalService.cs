@@ -26,9 +26,7 @@ public class MovieRentalService
 
 	public async Task<MovieModel> RentalMovieAsync(int idMovie)
 	{
-		var movieEntity = await repositoryMovie.GetByIdAsync(idMovie);
-
-		if (!movieEntity.IsAvailable)
+		if (await repositoryMovie.GetByIdAsync(idMovie) is not { IsAvailable: false } movieEntity)
 			return null;
 
 		movieEntity.IsAvailable = false;
