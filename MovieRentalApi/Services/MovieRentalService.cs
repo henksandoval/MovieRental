@@ -7,7 +7,12 @@ using MovieRentalApi.Utilities;
 
 namespace MovieRentalApi.Services;
 
-public class MovieRentalService
+public interface IMovieRentalService
+{
+	Task<MovieModel> RentalMovieAsync(int idMovie);
+}
+
+public class MovieRentalService : IMovieRentalService
 {
 	private readonly IClock clock;
 	private readonly IMapper mapper;
