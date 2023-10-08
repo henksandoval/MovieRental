@@ -5,6 +5,7 @@ using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
+using MovieRentalApi.Requests;
 
 namespace MovieRentalApiTests.Controllers;
 
@@ -28,7 +29,7 @@ public class MovieControllerTests
 	public async Task MovieController_WhenReceivedMovie_ShouldReturnCreatedAtResult()
 	{
 		//Arrange
-		var movieCreateModel = fixture.Create<MovieCreateModel>();
+		var movieCreateModel = fixture.Create<MovieCreateRequest>();
 		var movieEntity = mapper.Map<MovieEntity>(movieCreateModel);
 
 		//Act
@@ -39,7 +40,8 @@ public class MovieControllerTests
 		var movieResponse = result?.Value as MovieModel;
 
 		var movieExpected = mapper.Map<MovieModel>(movieEntity);
-		var expectedResult = new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
+		var expectedResult =
+			new CreatedAtRouteResult(nameof(MovieController.GetAsync), new { id = movieEntity.Id }, movieExpected);
 
 		result.Should().BeEquivalentTo(expectedResult);
 		movieResponse.Should().BeEquivalentTo(movieExpected);

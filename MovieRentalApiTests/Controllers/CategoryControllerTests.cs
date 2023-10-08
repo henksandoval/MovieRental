@@ -5,6 +5,7 @@ using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Mappers;
 using MovieRentalApi.Models;
+using MovieRentalApi.Requests;
 
 namespace MovieRentalApiTests.Controllers;
 
@@ -28,7 +29,7 @@ public class CategoryControllerTests
 	public async Task CategoryController_WhenReceiveACategoryCreateModel_ShouldReturnCreatedAtResult()
 	{
 		//Arrange
-		var createModel = fixture.Create<CategoryCreateModel>();
+		var createModel = fixture.Create<CategoryCreateRequest>();
 		var entity = mapper.Map<CategoryEntity>(createModel);
 
 		//Act
@@ -36,7 +37,8 @@ public class CategoryControllerTests
 
 		//Assert
 		var expectedModel = mapper.Map<CategoryModel>(entity);
-		var expectedResult = new CreatedAtRouteResult(nameof(CategoryController.GetAsync), new { id = entity.Id }, expectedModel);
+		var expectedResult =
+			new CreatedAtRouteResult(nameof(CategoryController.GetAsync), new { id = entity.Id }, expectedModel);
 
 		var result = response as CreatedAtRouteResult;
 		var modelResult = result?.Value as CategoryModel;

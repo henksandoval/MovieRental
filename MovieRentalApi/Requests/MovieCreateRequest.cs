@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieRentalApi.Models;
+namespace MovieRentalApi.Requests;
 
-public class MovieCreateModel
+public class MovieCreateRequest
 {
 	//[Required(ErrorMessage = "El campo {0} es obligatorio.")]
 	//[StringLength(maximumLength: 20, MinimumLength = 2, ErrorMessage = "El campo {0} debe contener entre {2} y {1} carácteres de longitud.")]

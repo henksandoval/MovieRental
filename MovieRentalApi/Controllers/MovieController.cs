@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Models;
+using MovieRentalApi.Requests;
 
 namespace MovieRentalApi.Controllers;
 
@@ -20,9 +21,9 @@ public class MovieController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> PostAsync([FromBody] MovieCreateModel movieCreateModel)
+	public async Task<IActionResult> PostAsync([FromBody] MovieCreateRequest movieCreateRequest)
 	{
-		var movieEntity = mapper.Map<MovieEntity>(movieCreateModel);
+		var movieEntity = mapper.Map<MovieEntity>(movieCreateRequest);
 
 		await repository.CreateAsync(movieEntity);
 

@@ -49,10 +49,7 @@ public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : 
 	{
 		try
 		{
-			if (isTransactional)
-			{
-				await transaction.CommitAsync();
-			}
+			if (isTransactional) await transaction.CommitAsync();
 		}
 		catch
 		{

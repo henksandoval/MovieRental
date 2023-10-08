@@ -12,14 +12,14 @@ public interface IMovieRentalService
 	Task<MovieModel> RentalMovieAsync(int idMovie);
 }
 
-public class MovieRentalService : IMovieRentalService
+public class RentalService : IMovieRentalService
 {
 	private readonly IClock clock;
 	private readonly IMapper mapper;
 	private readonly IBaseRepository<MovieEntity> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
 
-	public MovieRentalService(IBaseRepository<MovieEntity> repositoryMovie,
+	public RentalService(IBaseRepository<MovieEntity> repositoryMovie,
 		IBaseRepository<RentalEntity> repositoryRental,
 		IClock clock,
 		IMapper mapper)

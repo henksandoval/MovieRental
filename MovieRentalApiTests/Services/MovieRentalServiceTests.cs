@@ -17,7 +17,7 @@ public class MovieRentalServiceTests
 	private readonly IClock clock;
 	private readonly IBaseRepository<MovieEntity> repositoryMovie;
 	private readonly IBaseRepository<RentalEntity> repositoryRental;
-	private readonly MovieRentalService service;
+	private readonly RentalService service;
 
 	public MovieRentalServiceTests()
 	{
@@ -27,10 +27,11 @@ public class MovieRentalServiceTests
 		repositoryMovie = Substitute.For<IBaseRepository<MovieEntity>>();
 		repositoryRental = Substitute.For<IBaseRepository<RentalEntity>>();
 		clock = Substitute.For<IClock>();
-		service = new MovieRentalService(repositoryMovie, repositoryRental, clock, mapper);
+		service = new RentalService(repositoryMovie, repositoryRental, clock, mapper);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debe responder la pelicula.")]
+	[Fact(DisplayName =
+		"MovieRentalService Cuando Solicitan Un Id de Pelicula Disponible, debe responder la pelicula.")]
 	public async Task MovieRentalService_WhenReceiveRequestIdMovieAndMovieIsAvailable_ShouldReturnTheMovie()
 	{
 		//Arrange (Preparar)
@@ -46,7 +47,8 @@ public class MovieRentalServiceTests
 		movieResponse.Should().BeEquivalentTo(expectedMovie);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Database, debe arrojar (throw) una exception MovieNotFoundException.")]
+	[Fact(DisplayName =
+		"MovieRentalService Cuando Solicitan una Pelicula que no existe en Database, debe arrojar (throw) una exception MovieNotFoundException.")]
 	public async Task MovieRentalService_WhenRepositoryReturnNullMovieEntity_ShouldThrowException()
 	{
 		//Arrange (Preparar)
@@ -62,7 +64,8 @@ public class MovieRentalServiceTests
 			.WithMessage($"The Movie {idMovie} is not available.");
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
+	[Fact(DisplayName =
+		"MovieRentalService Cuando La Pelicula Esta Disponible, Debe Registrar en Base de datos que esta alquilada.")]
 	public async Task MovieRentalService_WhenMovieIsAvailable_ShouldSaveInDatabase()
 	{
 		//Arrange (Preparar)
