@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore.Storage;
 using MovieRentalApi.Data.Entities;
 using MovieRentalApi.Data.Repositories;
 using MovieRentalApi.Exceptions;
@@ -44,7 +46,7 @@ public class MovieRentalServiceTests
 		movieResponse.Should().BeEquivalentTo(expectedMovie);
 	}
 
-	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Databae, debe arrojar (throw) una exception.")]
+	[Fact(DisplayName = "MovieRentalService Cuando Solicitan una Pelicula que no existe en Database, debe arrojar (throw) una exception MovieNotFoundException.")]
 	public async Task MovieRentalService_WhenRepositoryReturnNullMovieEntity_ShouldThrowException()
 	{
 		//Arrange (Preparar)
@@ -67,21 +69,6 @@ public class MovieRentalServiceTests
 		const int idMovie = 1;
 		var entity = new MovieEntity { IsAvailable = true };
 		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
-
-		//Act (Actuar)
-		_ = await service.RentalMovieAsync(idMovie);
-
-		//Assert (Asegurar)
-		await repositoryMovie.Received(1).UpdateAsync(Arg.Is<MovieEntity>(e => !e.IsAvailable));
-	}
-
-	[Fact(DisplayName = "MovieRentalService Cuando la Pelicula Esta Disponible, debe guardar la fecha de alquiler.")]
-	public async Task MovieRentalService_WhenMovieIsAvailable_ShouldSaveRentalDateInDatabase()
-	{
-		//Arrange (Preparar)
-		const int idMovie = 1;
-		var entity = new MovieEntity { IsAvailable = true };
-		repositoryMovie.GetByIdAsync(idMovie).Returns(entity);
 		var expectedDate = new DateTime(1995, 05, 16, 0, 0, 0, DateTimeKind.Utc);
 		clock.GetCurrentTime().Returns(expectedDate);
 
@@ -89,6 +76,14 @@ public class MovieRentalServiceTests
 		_ = await service.RentalMovieAsync(idMovie);
 
 		//Assert (Asegurar)
-		await repositoryRental.Received(1).CreateAsync(Arg.Is<RentalEntity>(r => r.RentalDate == expectedDate));
+		using (new AssertionScope())
+		{
+			await repositoryMovie.Received(1)
+				.UpdateAsync(Arg.Is<MovieEntity>(e => !e.IsAvailable));
+			await repositoryRental.Received(1)
+				.CreateAsync(Arg.Is<RentalEntity>(r => r.RentalDate == expectedDate));
+			await repositoryMovie.Received(1)
+				.CommitAsync(Arg.Any<IDbContextTransaction>());
+		}
 	}
 }
